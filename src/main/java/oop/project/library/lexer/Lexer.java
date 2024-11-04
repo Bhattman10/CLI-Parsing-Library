@@ -1,5 +1,6 @@
 package oop.project.library.lexer;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,13 @@ public class Lexer {
         this.string_length = input.length();
     }
 
-    public Map<String, Object> lex() throws Exception
+    public Map<String, Object> lex() throws ParseException
     {
+        if(char_index == string_length)
+        {
+            throw new ParseException("No arguments provided.", char_index);
+        }
+
         while(char_index < string_length)
         {
             if(Character.isWhitespace(arguments.charAt(char_index)))
@@ -29,7 +35,7 @@ public class Lexer {
                     && arguments.charAt(char_index+1) == '-'
                     && arguments.charAt(char_index+2) == '-')
             {
-                //TODO: throw error
+                throw new ParseException("Invalid number of hyphens.", char_index);
             }
             else if(string_length - char_index > 2
                     && arguments.charAt(char_index) == '-'
@@ -37,17 +43,19 @@ public class Lexer {
             {
                 char_index += 2;
                 lexPositional();
+                char_index++;
             }
             else
             {
                 lexNamed();
+                char_index++;
             }
         }
 
         return lexed_arguments;
     }
 
-    private void lexPositional() throws Exception
+    private void lexPositional() throws ParseException
     {
         String flag_name = "", flag_value = "";
 
@@ -59,10 +67,19 @@ public class Lexer {
 
         if(flag_name == "")
         {
-            throw new Exception("No flag name provided.");
+            throw new ParseException("No flag name provided.", char_index);
         }
 
+        //Iterate past white space
         char_index++;
+
+        //Check if there are 2 hyphens, indicating a flag
+        if(string_length - char_index > 2
+                && arguments.charAt(char_index) == '-'
+                && arguments.charAt(char_index+1) == '-')
+        {
+            throw new ParseException("Flag used instead of value.", char_index);
+        }
 
         while(char_index < string_length && !Character.isWhitespace(arguments.charAt(char_index)))
         {
@@ -72,13 +89,13 @@ public class Lexer {
 
         if(flag_value == "")
         {
-            throw new Exception("No flag value provided.");
+            throw new ParseException("No flag value provided.", char_index);
         }
 
         lexed_arguments.put(flag_name, flag_value);
     }
 
-    private void lexNamed() throws Exception
+    private void lexNamed()
     {
         String positional_argument = "";
 

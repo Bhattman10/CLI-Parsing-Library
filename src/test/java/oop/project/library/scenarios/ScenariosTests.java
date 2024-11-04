@@ -31,8 +31,26 @@ class ScenariosTests {
             Arguments.of("Flag", """
                 lex --flag value
                 """, Map.of("flag", "value")),
+            Arguments.of("Multiple Positional Arguments", """
+                lex 0 1 2
+                """, Map.of("0", "0", "1", "1", "2", "2")),
+            Arguments.of("Positional Argument, Named Argument", """
+                lex literal --flag value
+                """, Map.of("0", "literal", "flag", "value")),
+            Arguments.of("Named Argument, Positional Argument", """
+                lex --flag value literal
+                """, Map.of("flag", "value", "0", "literal")),
             Arguments.of("Flag Without Value", """
                 lex --flag
+                """, null),
+            Arguments.of("Three Hyphens", """
+                lex ---flag
+                """, null),
+            Arguments.of("Flag as a Value", """
+                lex --invalid --argument
+                """, null),
+            Arguments.of("Missing Positional Argument", """
+                lex
                 """, null)
         );
     }
