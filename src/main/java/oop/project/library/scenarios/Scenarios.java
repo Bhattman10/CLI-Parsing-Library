@@ -1,5 +1,7 @@
 package oop.project.library.scenarios;
 
+import oop.project.library.lexer.Lexer;
+
 import java.util.Map;
 
 public class Scenarios {
@@ -29,7 +31,18 @@ public class Scenarios {
     private static Result<Map<String, Object>> lex(String arguments) {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        Lexer lexer = new Lexer(arguments);
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+            return new Result.Success<>(result);
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> add(String arguments) {
