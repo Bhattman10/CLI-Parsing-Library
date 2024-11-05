@@ -109,7 +109,16 @@ class ScenariosTests {
                 """, Map.of("left", -1.0, "right", 2.0)),
             Arguments.of("Negative Decimal", """
                 sub --left 1 --right -2.0
-                """, Map.of("left", 1.0, "right", -2.0))
+                """, Map.of("left", 1.0, "right", -2.0)),
+            Arguments.of("Missing Argument", """
+                sub --left 1
+                """, null),
+            Arguments.of("Incorrect Type", """
+                sub --left 1 --right hello
+                """, null),
+            Arguments.of("Invalid Flag Name", """
+                sub --flag 1 --right 2
+                """, null)
         );
     }
 

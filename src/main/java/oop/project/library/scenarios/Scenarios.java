@@ -63,9 +63,9 @@ public class Scenarios {
         {
             Map<String, Object> result = lexer.lex();
 
-            if(result.size() > 2)
+            if(result.size() != 2)
             {
-                throw new Exception("More than 2 arguments provided.");
+                throw new Exception("Invalid number of arguments.");
             }
 
             int left = parser.parseInt((String) result.get("0"));
@@ -87,9 +87,9 @@ public class Scenarios {
         {
             Map<String, Object> result = lexer.lex();
 
-            if(result.size() > 2)
+            if(result.size() != 2)
             {
-                throw new Exception("More than 2 arguments provided.");
+                throw new Exception("Invalid number of arguments.");
             }
 
             double left = parser.parseDouble((String) result.get("left"));
