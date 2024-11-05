@@ -1,7 +1,9 @@
 package oop.project.library.scenarios;
 
 import oop.project.library.lexer.Lexer;
+import oop.project.library.parser.Parser;
 
+import java.text.ParseException;
 import java.util.Map;
 
 public class Scenarios {
@@ -53,7 +55,28 @@ public class Scenarios {
         //var left = IntegerParser.parse(args.positional[0]);
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        Lexer lexer = new Lexer(arguments);
+        Parser parser = new Parser();
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+
+            if(result.size() > 2)
+            {
+                throw new Exception("More than 3 arguments provided.");
+            }
+
+            int left = parser.parseInt((String) result.get("0"));
+            int right = parser.parseInt((String) result.get("1"));
+
+            return new Result.Success<>(Map.of("left", left, "right", right));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
