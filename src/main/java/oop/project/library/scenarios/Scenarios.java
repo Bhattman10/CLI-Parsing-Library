@@ -65,7 +65,7 @@ public class Scenarios {
 
             if(result.size() > 2)
             {
-                throw new Exception("More than 3 arguments provided.");
+                throw new Exception("More than 2 arguments provided.");
             }
 
             int left = parser.parseInt((String) result.get("0"));
@@ -80,7 +80,27 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        Lexer lexer = new Lexer(arguments);
+        Parser parser = new Parser();
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+
+            if(result.size() > 2)
+            {
+                throw new Exception("More than 2 arguments provided.");
+            }
+
+            double left = parser.parseDouble((String) result.get("left"));
+            double right = parser.parseDouble((String) result.get("right"));
+
+            return new Result.Success<>(Map.of("left", left, "right", right));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {

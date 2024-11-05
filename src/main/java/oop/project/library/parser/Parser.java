@@ -12,4 +12,8 @@ public class Parser {
         return Integer.parseInt(input);
     }
 
+    public double parseDouble(String input) {
+        return Double.parseDouble(input);
+    }
+
 }
