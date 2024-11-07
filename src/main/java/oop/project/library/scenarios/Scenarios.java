@@ -172,7 +172,32 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        Lexer lexer = new Lexer(arguments);
+        Parser parser = new Parser();
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+
+            if(result.size() > 1)
+            {
+                throw new Exception("Invalid number of arguments.");
+            }
+
+            String message = parser.parseString((String) result.get("0"));
+
+            return new Result.Success<>(Map.of("message", message));
+        }
+        catch (Exception e)
+        {
+            if(e.getMessage().equals("No arguments provided."))
+            {
+                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
+            }
+
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
