@@ -5,6 +5,7 @@ import oop.project.library.parser.Parser;
 
 import java.text.ParseException;
 import java.util.Map;
+import java.util.Objects;
 
 public class Scenarios {
 
@@ -139,7 +140,35 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        Lexer lexer = new Lexer(arguments);
+        Parser parser = new Parser();
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+
+            if(result.size() != 1)
+            {
+                throw new Exception("Invalid number of arguments.");
+            }
+
+            String difficulty = parser.parseString((String) result.get("0"));
+
+            if(!Objects.equals(difficulty, "easy")
+                    && !Objects.equals(difficulty, "normal")
+                    && !Objects.equals(difficulty, "hard")
+                    && !Objects.equals(difficulty, "peaceful"))
+            {
+                throw new Exception("Invalid difficulty mode.");
+            }
+
+            return new Result.Success<>(Map.of("difficulty", difficulty));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
