@@ -4,6 +4,8 @@ import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.Parser;
 
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,12 +37,12 @@ public class Scenarios {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
 
-        Lexer lexer = new Lexer(arguments);
+        Map<String, Object> result = new HashMap<>();
 
         try
         {
-            Map<String, Object> result = lexer.lex();
-            return new Result.Success<>(result);
+            Lexer lexer = new Lexer(arguments);
+            return new Result.Success<>(lexer.all_arguments);
         }
         catch (Exception e)
         {
@@ -57,20 +59,18 @@ public class Scenarios {
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
 
-        Lexer lexer = new Lexer(arguments);
-        Parser parser = new Parser();
-
         try
         {
-            Map<String, Object> result = lexer.lex();
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
 
-            if(result.size() != 2)
+            if(lexer.positional_arguments.size() != 2)
             {
-                throw new Exception("Invalid number of arguments.");
+                throw new Exception("Invalid number of positional arguments.");
             }
 
-            int left = parser.parseInt((String) result.get("0"));
-            int right = parser.parseInt((String) result.get("1"));
+            int left = parser.parseInt(lexer.positional_arguments.get(0));
+            int right = parser.parseInt(lexer.positional_arguments.get(1));
 
             return new Result.Success<>(Map.of("left", left, "right", right));
         }
@@ -81,20 +81,19 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
-        Lexer lexer = new Lexer(arguments);
-        Parser parser = new Parser();
 
         try
         {
-            Map<String, Object> result = lexer.lex();
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
 
-            if(result.size() != 2)
+            if(lexer.named_arguments.size() != 2)
             {
-                throw new Exception("Invalid number of arguments.");
+                throw new Exception("Invalid number of named arguments.");
             }
 
-            double left = parser.parseDouble((String) result.get("left"));
-            double right = parser.parseDouble((String) result.get("right"));
+            double left = parser.parseDouble(lexer.named_arguments.get("left"));
+            double right = parser.parseDouble(lexer.named_arguments.get("right"));
 
             return new Result.Success<>(Map.of("left", left, "right", right));
         }
@@ -112,19 +111,17 @@ public class Scenarios {
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
 
-        Lexer lexer = new Lexer(arguments);
-        Parser parser = new Parser();
-
         try
         {
-            Map<String, Object> result = lexer.lex();
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
 
-            if(result.size() != 1)
+            if(lexer.positional_arguments.size() != 1)
             {
-                throw new Exception("Invalid number of arguments.");
+                throw new Exception("Invalid number of positional arguments.");
             }
 
-            int number = parser.parseInt((String) result.get("0"));
+            int number = parser.parseInt(lexer.positional_arguments.getFirst());
 
             if(number < 1 || number > 100)
             {
@@ -141,19 +138,17 @@ public class Scenarios {
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
 
-        Lexer lexer = new Lexer(arguments);
-        Parser parser = new Parser();
-
         try
         {
-            Map<String, Object> result = lexer.lex();
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
 
-            if(result.size() != 1)
+            if(lexer.positional_arguments.size() != 1)
             {
-                throw new Exception("Invalid number of arguments.");
+                throw new Exception("Invalid number of positional arguments.");
             }
 
-            String difficulty = parser.parseString((String) result.get("0"));
+            String difficulty = parser.parseString(lexer.positional_arguments.getFirst());
 
             if(!Objects.equals(difficulty, "easy")
                     && !Objects.equals(difficulty, "normal")
@@ -173,19 +168,17 @@ public class Scenarios {
 
     private static Result<Map<String, Object>> echo(String arguments) {
 
-        Lexer lexer = new Lexer(arguments);
-        Parser parser = new Parser();
-
         try
         {
-            Map<String, Object> result = lexer.lex();
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
 
-            if(result.size() > 1)
+            if(lexer.positional_arguments.size() > 1)
             {
-                throw new Exception("Invalid number of arguments.");
+                throw new Exception("Too many positional arguments.");
             }
 
-            String message = parser.parseString((String) result.get("0"));
+            String message = parser.parseString(lexer.positional_arguments.getFirst());
 
             return new Result.Success<>(Map.of("message", message));
         }
@@ -201,11 +194,54 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        try
+        {
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
+
+            if(lexer.positional_arguments.size() != 1)
+            {
+                throw new Exception("Invalid number of positional arguments.");
+            }
+
+            if(lexer.named_arguments.size() > 1)
+            {
+                throw new Exception("Too many named arguments.");
+            }
+
+            String term = parser.parseString(lexer.positional_arguments.getFirst());
+
+            if(lexer.named_arguments.containsKey("case-insensitive"))
+            {
+                Boolean flag = Boolean.valueOf(parser.parseString(lexer.named_arguments.get("case-insensitive")));
+                return new Result.Success<>(Map.of("term", term, "case-insensitive", flag));
+            }
+
+            return new Result.Success<>(Map.of("term", term, "case-insensitive", false));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        try
+        {
+            Lexer lexer = new Lexer(arguments);
+            Parser parser = new Parser();
+
+            parser.registerCustomParser(LocalDate.class, LocalDate::parse);
+
+            LocalDate date = parser.parseCustom(lexer.positional_arguments.getFirst(), LocalDate.class);
+
+            return new Result.Success<>(Map.of("date", date));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
 }

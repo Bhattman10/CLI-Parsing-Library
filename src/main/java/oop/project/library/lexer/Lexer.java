@@ -1,24 +1,29 @@
 package oop.project.library.lexer;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Lexer {
 
-    public String arguments;
-    public Map<String, Object> lexed_arguments = new HashMap<>();
-    public int positional_index = 0;
-    public int char_index = 0;
-    public int string_length;
+    private final String arguments;
+    private int positional_index = 0;
+    private int char_index = 0;
+    private final int string_length;
 
-    public Lexer(String input) {
+    public List<String> positional_arguments = new ArrayList<>();
+    public Map<String, String> named_arguments = new HashMap<>();
+    public Map<String, Object> all_arguments = new HashMap<>();
+
+    public Lexer(String input) throws ParseException {
         this.arguments = input;
         this.string_length = input.length();
+        lex();
     }
 
-    //FIXME: reference recorded lecture from 11/6
-    public Map<String, Object> lex() throws ParseException
+    private void lex() throws ParseException
     {
         if(char_index == string_length)
         {
@@ -52,8 +57,6 @@ public class Lexer {
                 char_index++;
             }
         }
-
-        return lexed_arguments;
     }
 
     private void lexPositional() throws ParseException
@@ -93,7 +96,8 @@ public class Lexer {
             throw new ParseException("No flag value provided.", char_index);
         }
 
-        lexed_arguments.put(flag_name, flag_value);
+        named_arguments.put(flag_name, flag_value);
+        all_arguments.put(flag_name, flag_value);
     }
 
     private void lexNamed()
@@ -106,7 +110,8 @@ public class Lexer {
             char_index++;
         }
 
-        lexed_arguments.put(String.valueOf(positional_index), positional_argument);
+        positional_arguments.add(positional_argument);
+        all_arguments.put(String.valueOf(positional_index), positional_argument);
 
         positional_index++;
     }
