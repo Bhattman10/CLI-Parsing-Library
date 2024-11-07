@@ -17,6 +17,7 @@ public class Lexer {
         this.string_length = input.length();
     }
 
+    //FIXME: reference recorded lecture from 11/6
     public Map<String, Object> lex() throws ParseException
     {
         if(char_index == string_length)

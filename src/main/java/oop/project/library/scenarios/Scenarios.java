@@ -110,7 +110,32 @@ public class Scenarios {
         //the validation involved even if it's not in the library yet.
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
-        throw new UnsupportedOperationException("TODO"); //TODO
+
+        Lexer lexer = new Lexer(arguments);
+        Parser parser = new Parser();
+
+        try
+        {
+            Map<String, Object> result = lexer.lex();
+
+            if(result.size() != 1)
+            {
+                throw new Exception("Invalid number of arguments.");
+            }
+
+            int number = parser.parseInt((String) result.get("0"));
+
+            if(number < 1 || number > 100)
+            {
+                throw new Exception("Invalid range.");
+            }
+
+            return new Result.Success<>(Map.of("number", number));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
