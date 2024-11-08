@@ -3,9 +3,7 @@ package oop.project.library.scenarios;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.Parser;
 
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,8 +34,6 @@ public class Scenarios {
     private static Result<Map<String, Object>> lex(String arguments) {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
-
-        Map<String, Object> result = new HashMap<>();
 
         try
         {
@@ -172,23 +168,29 @@ public class Scenarios {
         {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
+            String message;
 
-            if(lexer.positional_arguments.size() > 1)
+            if(lexer.all_arguments.size() > 1)
             {
-                throw new Exception("Too many positional arguments.");
+                throw new Exception("Too many arguments.");
             }
 
-            String message = parser.parseString(lexer.positional_arguments.getFirst());
+            // Argument is a positional argument
+            if(lexer.positional_arguments.size() == 1)
+            {
+                message = parser.parseString(lexer.positional_arguments.getFirst());
+            }
+            // Argument is a named argument
+            else
+            {
+                message = parser.parseString(lexer.named_arguments.get("message"));
+            }
 
-            return new Result.Success<>(Map.of("message", message));
+            return new Result.Success<>(Map.of("message", Objects.requireNonNullElse(message, "Echo, echo, echo...")));
+
         }
         catch (Exception e)
         {
-            if(e.getMessage().equals("No arguments provided."))
-            {
-                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
-            }
-
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -214,7 +216,7 @@ public class Scenarios {
 
             if(lexer.named_arguments.containsKey("case-insensitive"))
             {
-                Boolean flag = Boolean.valueOf(parser.parseString(lexer.named_arguments.get("case-insensitive")));
+                Boolean flag = parser.parseBoolean(lexer.named_arguments.get("case-insensitive"));
                 return new Result.Success<>(Map.of("term", term, "case-insensitive", flag));
             }
 
@@ -231,6 +233,11 @@ public class Scenarios {
         {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
+
+            if(lexer.positional_arguments.size() != 1)
+            {
+                throw new Exception("Invalid number of positional arguments.");
+            }
 
             parser.registerCustomParser(LocalDate.class, LocalDate::parse);
 

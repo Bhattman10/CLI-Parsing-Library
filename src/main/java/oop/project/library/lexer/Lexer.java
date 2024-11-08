@@ -25,11 +25,6 @@ public class Lexer {
 
     private void lex() throws ParseException
     {
-        if(char_index == string_length)
-        {
-            throw new ParseException("No arguments provided.", char_index);
-        }
-
         while(char_index < string_length)
         {
             if(Character.isWhitespace(arguments.charAt(char_index)))
@@ -69,7 +64,7 @@ public class Lexer {
             char_index++;
         }
 
-        if(flag_name == "")
+        if(flag_name.isEmpty())
         {
             throw new ParseException("No flag name provided.", char_index);
         }
@@ -91,7 +86,7 @@ public class Lexer {
             char_index++;
         }
 
-        if(flag_value == "")
+        if(flag_value.isEmpty())
         {
             throw new ParseException("No flag value provided.", char_index);
         }

@@ -118,6 +118,12 @@ class ScenariosTests {
                 """, null),
             Arguments.of("Invalid Flag Name", """
                 sub --flag 1 --right 2
+                """, null),
+            Arguments.of("Too Many Arguments", """
+                sub --left 1 --right 2 --extra 3
+                """, null),
+            Arguments.of("Positional Arguments", """
+                sub 1 2
                 """, null)
         );
     }
@@ -135,6 +141,9 @@ class ScenariosTests {
                 """, Map.of("number", 15)),
             Arguments.of("Zero", """
                 fizzbuzz 0
+                """, null),
+            Arguments.of("Named Argument", """
+                fizzbuzz -number 22
                 """, null)
         );
     }
@@ -150,8 +159,20 @@ class ScenariosTests {
             Arguments.of("Easy", """
                 difficulty easy
                 """, Map.of("difficulty", "easy")),
+            Arguments.of("Normal", """
+                difficulty normal
+                """, Map.of("difficulty", "normal")),
+            Arguments.of("Hard", """
+                difficulty hard
+                """, Map.of("difficulty", "hard")),
+            Arguments.of("Peaceful", """
+                difficulty peaceful
+                """, Map.of("difficulty", "peaceful")),
             Arguments.of("Hardcore", """
                 difficulty hardcore
+                """, null),
+            Arguments.of("Named Difficulty", """
+                difficulty --difficulty easy
                 """, null)
         );
     }
@@ -166,10 +187,16 @@ class ScenariosTests {
         return Stream.of(
             Arguments.of("Default", """
                 echo
-                """, Map.of("message", "Echo, echo, echo!")),
+                """, Map.of("message", "Echo, echo, echo...")),
             Arguments.of("Message", """
                 echo message
-                """, Map.of("message", "message"))
+                """, Map.of("message", "message")),
+            Arguments.of("Message", """
+                echo --message message
+                """, Map.of("message", "message")),
+            Arguments.of("Multiple Arguments", """
+                echo 1 2 3
+                """, null)
         );
     }
 
@@ -212,6 +239,9 @@ class ScenariosTests {
                 """, Map.of("date", LocalDate.of(2024, 2, 29))),
             Arguments.of("Invalid", """
                 weekday tuesday
+                """, null),
+            Arguments.of("Flag", """
+                weekday --flag 2024-10-23
                 """, null)
         );
     }
