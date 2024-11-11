@@ -13,14 +13,29 @@ public class Lexer {
     private int char_index = 0;
     private final int string_length;
 
-    public List<String> positional_arguments = new ArrayList<>();
-    public Map<String, String> named_arguments = new HashMap<>();
-    public Map<String, Object> all_arguments = new HashMap<>();
+    private List<String> positional_arguments = new ArrayList<>();
+    private Map<String, String> named_arguments = new HashMap<>();
+    private Map<String, Object> all_arguments = new HashMap<>();
 
     public Lexer(String input) throws ParseException {
         this.arguments = input;
         this.string_length = input.length();
         lex();
+    }
+
+    public List<String> get_positional_arguments()
+    {
+        return positional_arguments;
+    }
+
+    public Map<String, String> get_named_arguments()
+    {
+        return named_arguments;
+    }
+
+    public Map<String, Object> get_all_arguments()
+    {
+        return all_arguments;
     }
 
     private void lex() throws ParseException

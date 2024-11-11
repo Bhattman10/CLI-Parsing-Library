@@ -38,7 +38,7 @@ public class Scenarios {
         try
         {
             Lexer lexer = new Lexer(arguments);
-            return new Result.Success<>(lexer.all_arguments);
+            return new Result.Success<>(lexer.get_all_arguments());
         }
         catch (Exception e)
         {
@@ -60,13 +60,13 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.positional_arguments.size() != 2)
+            if(lexer.get_positional_arguments().size() != 2)
             {
                 throw new Exception("Invalid number of positional arguments.");
             }
 
-            int left = parser.parseInt(lexer.positional_arguments.get(0));
-            int right = parser.parseInt(lexer.positional_arguments.get(1));
+            int left = parser.parseInt(lexer.get_positional_arguments().get(0));
+            int right = parser.parseInt(lexer.get_positional_arguments().get(1));
 
             return new Result.Success<>(Map.of("left", left, "right", right));
         }
@@ -83,13 +83,13 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.named_arguments.size() != 2)
+            if(lexer.get_named_arguments().size() != 2)
             {
                 throw new Exception("Invalid number of named arguments.");
             }
 
-            double left = parser.parseDouble(lexer.named_arguments.get("left"));
-            double right = parser.parseDouble(lexer.named_arguments.get("right"));
+            double left = parser.parseDouble(lexer.get_named_arguments().get("left"));
+            double right = parser.parseDouble(lexer.get_named_arguments().get("right"));
 
             return new Result.Success<>(Map.of("left", left, "right", right));
         }
@@ -112,12 +112,12 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.positional_arguments.size() != 1)
+            if(lexer.get_positional_arguments().size() != 1)
             {
                 throw new Exception("Invalid number of positional arguments.");
             }
 
-            int number = parser.parseInt(lexer.positional_arguments.getFirst());
+            int number = parser.parseInt(lexer.get_positional_arguments().getFirst());
 
             if(number < 1 || number > 100)
             {
@@ -139,12 +139,12 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.positional_arguments.size() != 1)
+            if(lexer.get_positional_arguments().size() != 1)
             {
                 throw new Exception("Invalid number of positional arguments.");
             }
 
-            String difficulty = parser.parseString(lexer.positional_arguments.getFirst());
+            String difficulty = parser.parseString(lexer.get_positional_arguments().getFirst());
 
             if(!Objects.equals(difficulty, "easy")
                     && !Objects.equals(difficulty, "normal")
@@ -170,20 +170,20 @@ public class Scenarios {
             Parser parser = new Parser();
             String message;
 
-            if(lexer.all_arguments.size() > 1)
+            if(lexer.get_named_arguments().size() > 1)
             {
                 throw new Exception("Too many arguments.");
             }
 
             // Argument is a positional argument
-            if(lexer.positional_arguments.size() == 1)
+            if(lexer.get_positional_arguments().size() == 1)
             {
-                message = parser.parseString(lexer.positional_arguments.getFirst());
+                message = parser.parseString(lexer.get_positional_arguments().getFirst());
             }
             // Argument is a named argument
             else
             {
-                message = parser.parseString(lexer.named_arguments.get("message"));
+                message = parser.parseString(lexer.get_named_arguments().get("message"));
             }
 
             return new Result.Success<>(Map.of("message", Objects.requireNonNullElse(message, "Echo, echo, echo...")));
@@ -202,21 +202,21 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.positional_arguments.size() != 1)
+            if(lexer.get_positional_arguments().size() != 1)
             {
                 throw new Exception("Invalid number of positional arguments.");
             }
 
-            if(lexer.named_arguments.size() > 1)
+            if(lexer.get_named_arguments().size() > 1)
             {
                 throw new Exception("Too many named arguments.");
             }
 
-            String term = parser.parseString(lexer.positional_arguments.getFirst());
+            String term = parser.parseString(lexer.get_positional_arguments().getFirst());
 
-            if(lexer.named_arguments.containsKey("case-insensitive"))
+            if(lexer.get_named_arguments().containsKey("case-insensitive"))
             {
-                Boolean flag = parser.parseBoolean(lexer.named_arguments.get("case-insensitive"));
+                Boolean flag = parser.parseBoolean(lexer.get_named_arguments().get("case-insensitive"));
                 return new Result.Success<>(Map.of("term", term, "case-insensitive", flag));
             }
 
@@ -234,14 +234,14 @@ public class Scenarios {
             Lexer lexer = new Lexer(arguments);
             Parser parser = new Parser();
 
-            if(lexer.positional_arguments.size() != 1)
+            if(lexer.get_positional_arguments().size() != 1)
             {
                 throw new Exception("Invalid number of positional arguments.");
             }
 
             parser.registerCustomParser(LocalDate.class, LocalDate::parse);
 
-            LocalDate date = parser.parseCustom(lexer.positional_arguments.getFirst(), LocalDate.class);
+            LocalDate date = parser.parseCustom(lexer.get_positional_arguments().getFirst(), LocalDate.class);
 
             return new Result.Success<>(Map.of("date", date));
         }
