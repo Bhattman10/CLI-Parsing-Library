@@ -38,6 +38,12 @@ public class Scenarios {
         try
         {
             Lexer lexer = new Lexer(arguments);
+
+            if(lexer.get_all_arguments().isEmpty())
+            {
+                throw new Exception("No arguments provided");
+            }
+
             return new Result.Success<>(lexer.get_all_arguments());
         }
         catch (Exception e)
@@ -172,7 +178,12 @@ public class Scenarios {
 
             if(lexer.get_named_arguments().size() > 1)
             {
-                throw new Exception("Too many arguments.");
+                throw new Exception("Too many named arguments.");
+            }
+
+            if(lexer.get_positional_arguments().size() > 1)
+            {
+                throw new Exception("Too many positional arguments.");
             }
 
             // Argument is a positional argument
