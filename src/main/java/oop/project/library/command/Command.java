@@ -15,42 +15,49 @@ public class Command {
     private Lexer lexer;
     private Parser parser = new Parser();
     private List<Argument> arguments = new ArrayList<>();
-
-    public Map<String, Object> result = new HashMap<>();
+    private int positional_index;
+    private Map<String, Object> result = new HashMap<>();
 
     public Command(String name)
     {
         this.name = name;
     }
 
-    public void addArgument(String name, Object type, Boolean required)
+    public void addArgument(String name, Boolean positional, Object type, Boolean required)
     {
-        arguments.add(new Argument(name, type, required));
+        arguments.add(new Argument(name, positional, type, required));
     }
 
     public Map<String, Object> parseArgs(String input) throws ParseException, Exception
     {
         lexer = new Lexer(input);
 
-        //FIXME: only checks positional arguments
-        if(lexer.get_positional_arguments().size() > arguments.size())
+        if(lexer.get_all_arguments().size() > arguments.size())
         {
             throw new Exception("Too many arguments");
         }
 
-        for(int i = 0; i < arguments.size(); i++)
+        for(int index = 0; index < arguments.size(); index++)
         {
-            checkArgument(i);
+            if(arguments.get(index).positional)
+            {
+                parsePositionalArgument(index);
+            }
+            else
+            {
+                parseNamedArgument(index);
+            }
         }
+
         return result;
     }
 
-    //FIXME: Currently, only checks positional arguments. Develop solution for checking named too.
-    private void checkArgument(int index) throws NumberFormatException
+    private void parsePositionalArgument(int index) throws NumberFormatException
     {
+        String name = arguments.get(index).name;
+
         if(arguments.get(index).type == int.class)
         {
-            String name = arguments.get(index).name;
             int integer = parser.parseInt(lexer.get_positional_arguments().get(index));
             result.put(name, integer);
         }
@@ -65,6 +72,35 @@ public class Command {
         else if(arguments.get(index).type == String.class)
         {
             parser.parseInt(lexer.get_positional_arguments().get(index));
+        }
+        else
+        {
+            //TODO: custom parser
+        }
+
+    }
+
+    private void parseNamedArgument(int index) throws NumberFormatException
+    {
+        String name = arguments.get(index).name;
+
+        if(arguments.get(index).type == int.class)
+        {
+            int number = parser.parseInt(lexer.get_named_arguments().get(name));
+            result.put(name, number);
+        }
+        else if(arguments.get(index).type == double.class)
+        {
+            double number = parser.parseDouble(lexer.get_named_arguments().get(name));
+            result.put(name, number);
+        }
+        else if(arguments.get(index).type == boolean.class)
+        {
+            parser.parseInt(lexer.get_named_arguments().get(name));
+        }
+        else if(arguments.get(index).type == String.class)
+        {
+            parser.parseInt(lexer.get_named_arguments().get(name));
         }
         else
         {
