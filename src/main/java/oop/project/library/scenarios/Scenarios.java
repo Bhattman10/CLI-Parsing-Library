@@ -1,5 +1,6 @@
 package oop.project.library.scenarios;
 
+import oop.project.library.command.Command;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.Parser;
 
@@ -61,25 +62,38 @@ public class Scenarios {
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
 
+        Command command = new Command("add");
+        command.addArgument("left", int.class, true);
+        command.addArgument("right", int.class, true);
+
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-
-            if(lexer.get_positional_arguments().size() != 2)
-            {
-                throw new Exception("Invalid number of positional arguments.");
-            }
-
-            int left = parser.parseInt(lexer.get_positional_arguments().get(0));
-            int right = parser.parseInt(lexer.get_positional_arguments().get(1));
-
-            return new Result.Success<>(Map.of("left", left, "right", right));
+            return new Result.Success<>(command.parseArgs(arguments));
         }
         catch (Exception e)
         {
             return new Result.Failure<>(e.getMessage());
         }
+
+//        try
+//        {
+//            Lexer lexer = new Lexer(arguments);
+//            Parser parser = new Parser();
+//
+//            if(lexer.get_positional_arguments().size() != 2)
+//            {
+//                throw new Exception("Invalid number of positional arguments.");
+//            }
+//
+//            int left = parser.parseInt(lexer.get_positional_arguments().get(0));
+//            int right = parser.parseInt(lexer.get_positional_arguments().get(1));
+//
+//            return new Result.Success<>(Map.of("left", left, "right", right));
+//        }
+//        catch (Exception e)
+//        {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
