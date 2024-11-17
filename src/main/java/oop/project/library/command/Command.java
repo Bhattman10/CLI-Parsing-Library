@@ -56,56 +56,81 @@ public class Command {
     {
         String name = arguments.get(index).name;
 
-        if(arguments.get(index).type == int.class)
+        //Parse integer
+        if(arguments.get(index).type == int.class && arguments.get(index).range == null)
         {
             int integer = parser.parseInt(lexer.get_positional_arguments().get(index));
             result.put(name, integer);
         }
+        //Parse integer w/ range
+        if(arguments.get(index).type == int.class)
+        {
+            int integer = parser.parseIntRange(lexer.get_positional_arguments().get(index),
+                    arguments.get(index).range[0],
+                    arguments.get(index).range[1]);
+            result.put(name, integer);
+        }
+        //Parse double
         else if(arguments.get(index).type == double.class)
         {
-            parser.parseInt(lexer.get_positional_arguments().get(index));
+            double number = parser.parseDouble(lexer.get_positional_arguments().get(index));
+            result.put(name, number);
         }
+        //Parse boolean
         else if(arguments.get(index).type == boolean.class)
         {
-            parser.parseInt(lexer.get_positional_arguments().get(index));
+            //TODO
         }
+        //Parse string
         else if(arguments.get(index).type == String.class)
         {
-            parser.parseInt(lexer.get_positional_arguments().get(index));
+            //TODO
         }
+        //Parse custom type
         else
         {
-            //TODO: custom parser
+            //TODO
         }
-
     }
 
     private void parseNamedArgument(int index) throws NumberFormatException
     {
         String name = arguments.get(index).name;
 
+        //Parse integer
+        if(arguments.get(index).type == int.class && arguments.get(index).range == null)
+        {
+            int integer = parser.parseInt(lexer.get_named_arguments().get(name));
+            result.put(name, integer);
+        }
+        //Parse integer w/ range
         if(arguments.get(index).type == int.class)
         {
-            int number = parser.parseInt(lexer.get_named_arguments().get(name));
-            result.put(name, number);
+            int integer = parser.parseIntRange(lexer.get_named_arguments().get(name),
+                    arguments.get(index).range[0],
+                    arguments.get(index).range[1]);
+            result.put(name, integer);
         }
+        //Parse double
         else if(arguments.get(index).type == double.class)
         {
             double number = parser.parseDouble(lexer.get_named_arguments().get(name));
             result.put(name, number);
         }
+        //Parse boolean
         else if(arguments.get(index).type == boolean.class)
         {
-            parser.parseInt(lexer.get_named_arguments().get(name));
+            //TODO
         }
+        //Parse string
         else if(arguments.get(index).type == String.class)
         {
-            parser.parseInt(lexer.get_named_arguments().get(name));
+            //TODO
         }
+        //Parse custom type
         else
         {
-            //TODO: custom parser
+            //TODO
         }
-
     }
 }

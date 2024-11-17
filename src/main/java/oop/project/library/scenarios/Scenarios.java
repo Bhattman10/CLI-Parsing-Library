@@ -116,29 +116,45 @@ public class Scenarios {
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
 
+        Command command = new Command("fizzbuzz");
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("number")
+                .setType(int.class)
+                .setRange(1, 100)
+                .build());
+
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-
-            if(lexer.get_positional_arguments().size() != 1)
-            {
-                throw new Exception("Invalid number of positional arguments.");
-            }
-
-            int number = parser.parseInt(lexer.get_positional_arguments().getFirst());
-
-            if(number < 1 || number > 100)
-            {
-                throw new Exception("Invalid range.");
-            }
-
-            return new Result.Success<>(Map.of("number", number));
+            return new Result.Success<>(command.parseArgs(arguments));
         }
         catch (Exception e)
         {
             return new Result.Failure<>(e.getMessage());
         }
+
+//        try
+//        {
+//            Lexer lexer = new Lexer(arguments);
+//            Parser parser = new Parser();
+//
+//            if(lexer.get_positional_arguments().size() != 1)
+//            {
+//                throw new Exception("Invalid number of positional arguments.");
+//            }
+//
+//            int number = parser.parseInt(lexer.get_positional_arguments().getFirst());
+//
+//            if(number < 1 || number > 100)
+//            {
+//                throw new Exception("Invalid range.");
+//            }
+//
+//            return new Result.Success<>(Map.of("number", number));
+//        }
+//        catch (Exception e)
+//        {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     //TODO

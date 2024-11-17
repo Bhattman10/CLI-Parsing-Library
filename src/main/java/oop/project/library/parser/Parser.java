@@ -16,6 +16,16 @@ public class Parser {
         return Integer.parseInt(input);
     }
 
+    public int parseIntRange(String input, int bottom, int top) throws NumberFormatException {
+        int number = Integer.parseInt(input);
+        if(number >= bottom && number <= top)
+        {
+            return number;
+        }
+
+        throw new NumberFormatException();
+    }
+
     public double parseDouble(String input) throws NumberFormatException {
         return Double.parseDouble(input);
     }

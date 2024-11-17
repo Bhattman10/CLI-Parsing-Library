@@ -139,6 +139,12 @@ class ScenariosTests {
             Arguments.of("Valid", """
                 fizzbuzz 15
                 """, Map.of("number", 15)),
+            Arguments.of("One", """
+                fizzbuzz 1
+                """, Map.of("number", 1)),
+            Arguments.of("Hundred", """
+                fizzbuzz 100
+                """, Map.of("number", 100)),
             Arguments.of("Zero", """
                 fizzbuzz 0
                 """, null),
