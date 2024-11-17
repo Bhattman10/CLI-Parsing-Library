@@ -1,5 +1,6 @@
 package oop.project.library.scenarios;
 
+import oop.project.library.command.Argument;
 import oop.project.library.command.Command;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.Parser;
@@ -63,8 +64,14 @@ public class Scenarios {
         //so we can build up the actual command system in Part 3.
 
         Command command = new Command("add");
-        command.addArgument("left", true, int.class, true);
-        command.addArgument("right", true, int.class, true);
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("left")
+                .setType(int.class)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("right")
+                .setType(int.class)
+                .build());
 
         try
         {
@@ -79,8 +86,16 @@ public class Scenarios {
     private static Result<Map<String, Object>> sub(String arguments) {
 
         Command command = new Command("sub");
-        command.addArgument("left", false, double.class, true);
-        command.addArgument("right", false, double.class, true);
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("left")
+                .setNamed()
+                .setType(double.class)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("right")
+                .setNamed()
+                .setType(double.class)
+                .build());
 
         try
         {

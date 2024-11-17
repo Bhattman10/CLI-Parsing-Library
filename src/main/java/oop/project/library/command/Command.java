@@ -23,9 +23,9 @@ public class Command {
         this.name = name;
     }
 
-    public void addArgument(String name, Boolean positional, Object type, Boolean required)
+    public void addArgument(Argument argument)
     {
-        arguments.add(new Argument(name, positional, type, required));
+        arguments.add(argument);
     }
 
     public Map<String, Object> parseArgs(String input) throws ParseException, Exception
@@ -39,13 +39,13 @@ public class Command {
 
         for(int index = 0; index < arguments.size(); index++)
         {
-            if(arguments.get(index).positional)
+            if(arguments.get(index).named)
             {
-                parsePositionalArgument(index);
+                parseNamedArgument(index);
             }
             else
             {
-                parseNamedArgument(index);
+                parsePositionalArgument(index);
             }
         }
 
