@@ -107,7 +107,6 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {
         //Note: This is the first command your library may not support all the
         //functionality to implement yet. This is fine - parse the number like
@@ -131,30 +130,6 @@ public class Scenarios {
         {
             return new Result.Failure<>(e.getMessage());
         }
-
-//        try
-//        {
-//            Lexer lexer = new Lexer(arguments);
-//            Parser parser = new Parser();
-//
-//            if(lexer.get_positional_arguments().size() != 1)
-//            {
-//                throw new Exception("Invalid number of positional arguments.");
-//            }
-//
-//            int number = parser.parseInt(lexer.get_positional_arguments().getFirst());
-//
-//            if(number < 1 || number > 100)
-//            {
-//                throw new Exception("Invalid range.");
-//            }
-//
-//            return new Result.Success<>(Map.of("number", number));
-//        }
-//        catch (Exception e)
-//        {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     //TODO
