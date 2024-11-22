@@ -5,8 +5,8 @@ public class Argument {
     public String name;
     public Boolean named;
     public Object type;
-    public Boolean optional;
     public int[] range;
+    public String[] choices;
 
 
     public Argument(Builder builder)
@@ -14,8 +14,8 @@ public class Argument {
         this.name = builder.name;
         this.named = builder.named;
         this.type = builder.type;
-        this.optional = builder.optional;
         this.range = builder.range;
+        this.choices = builder.choices;
     }
 
     // Static class Builder
@@ -23,10 +23,10 @@ public class Argument {
     public static class Builder {
 
         public String name;
-        public Boolean named = false;
+        public Boolean named;
         public Object type;
-        public Boolean optional = false;
         public int[] range;
+        public String[] choices;
 
         public static Builder newInstance()
         {
@@ -37,12 +37,16 @@ public class Argument {
 
         public Builder setName(String name)
         {
-            this.name = name;
-            return this;
-        }
-        public Builder setNamed()
-        {
-            this.named = true;
+            if(name.startsWith("--"))
+            {
+                this.name = name.substring(2);
+                this.named = true;
+            }
+            else
+            {
+                this.name = name;
+                this.named = false;
+            }
             return this;
         }
         public Builder setType(Object type)
@@ -50,16 +54,16 @@ public class Argument {
             this.type = type;
             return this;
         }
-        public Builder setRequired()
-        {
-            this.optional = true;
-            return this;
-        }
         public Builder setRange(int bottom, int top)
         {
             this.range = new int[2];
             this.range[0] = bottom;
             this.range[1] = top;
+            return this;
+        }
+        public Builder setChoices(String[] choices)
+        {
+            this.choices = choices;
             return this;
         }
 

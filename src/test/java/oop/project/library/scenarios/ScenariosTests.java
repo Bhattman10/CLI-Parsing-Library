@@ -124,6 +124,9 @@ class ScenariosTests {
                 """, null),
             Arguments.of("Positional Arguments", """
                 sub 1 2
+                """, null),
+            Arguments.of("Positional", """
+                sub left 2 right 1
                 """, null)
         );
     }

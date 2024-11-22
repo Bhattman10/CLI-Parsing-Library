@@ -3,7 +3,6 @@ package oop.project.library.command;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.Parser;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +11,9 @@ import java.util.Map;
 public class Command {
 
     private Lexer lexer;
-    private Parser parser = new Parser();
-    private List<Argument> arguments = new ArrayList<>();
-    private int positional_index;
-    private Map<String, Object> result = new HashMap<>();
+    private final Parser parser = new Parser();
+    private final List<Argument> arguments = new ArrayList<>();
+    private final Map<String, Object> result = new HashMap<>();
 
     public Command() {}
 
@@ -24,7 +22,7 @@ public class Command {
         arguments.add(argument);
     }
 
-    public Map<String, Object> parseArgs(String input) throws ParseException, Exception
+    public Map<String, Object> parseArgs(String input) throws Exception
     {
         lexer = new Lexer(input);
 
@@ -52,6 +50,11 @@ public class Command {
             else if(arguments.get(index).type == double.class)
             {
                 object = parseDouble(index, argumentName);
+            }
+            // Parse string choices
+            else if(arguments.get(index).choices != null)
+            {
+                object = parseStringChoices(index, argumentName);
             }
 
             //TODO
@@ -112,5 +115,21 @@ public class Command {
         }
 
         return number;
+    }
+
+    private String parseStringChoices(int index, String argumentName) throws Exception
+    {
+        String choice;
+
+        if(arguments.get(index).named)
+        {
+            choice = parser.parseStringChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
+        }
+        else
+        {
+            choice = parser.parseStringChoices(lexer.get_positional_arguments().get(index), arguments.get(index).choices);
+        }
+
+        return choice;
     }
 }

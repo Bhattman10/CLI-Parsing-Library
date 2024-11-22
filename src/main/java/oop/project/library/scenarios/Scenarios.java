@@ -87,13 +87,11 @@ public class Scenarios {
 
         Command command = new Command();
         command.addArgument(Argument.Builder.newInstance()
-                .setName("left")
-                .setNamed()
+                .setName("--left")
                 .setType(double.class)
                 .build());
         command.addArgument(Argument.Builder.newInstance()
-                .setName("right")
-                .setNamed()
+                .setName("--right")
                 .setType(double.class)
                 .build());
 
@@ -132,30 +130,18 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> difficulty(String arguments) {
+
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("difficulty")
+                .setType(String.class)
+                .setChoices(new String[]{"easy", "normal", "hard", "peaceful"})
+                .build());
 
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-
-            if(lexer.get_positional_arguments().size() != 1)
-            {
-                throw new Exception("Invalid number of positional arguments.");
-            }
-
-            String difficulty = parser.parseString(lexer.get_positional_arguments().getFirst());
-
-            if(!Objects.equals(difficulty, "easy")
-                    && !Objects.equals(difficulty, "normal")
-                    && !Objects.equals(difficulty, "hard")
-                    && !Objects.equals(difficulty, "peaceful"))
-            {
-                throw new Exception("Invalid difficulty mode.");
-            }
-
-            return new Result.Success<>(Map.of("difficulty", difficulty));
+            return new Result.Success<>(command.parseArgs(arguments));
         }
         catch (Exception e)
         {

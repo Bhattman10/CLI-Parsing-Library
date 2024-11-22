@@ -44,6 +44,17 @@ public class Parser {
         return input;
     }
 
+    public String parseStringChoices(String input, String[] options) throws Exception {
+        for (String option : options)
+        {
+            if (input.equals(option))
+            {
+                return input;
+            }
+        }
+       throw new Exception("Invalid choice.");
+    }
+
     public <T> void registerCustomParser(Class<T> type, CustomParser<T> parser) {
         customParsers.put(type, parser);
     }
