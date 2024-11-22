@@ -11,17 +11,13 @@ import java.util.Map;
 
 public class Command {
 
-    private String name;
     private Lexer lexer;
     private Parser parser = new Parser();
     private List<Argument> arguments = new ArrayList<>();
     private int positional_index;
     private Map<String, Object> result = new HashMap<>();
 
-    public Command(String name)
-    {
-        this.name = name;
-    }
+    public Command() {}
 
     public void addArgument(Argument argument)
     {
@@ -39,98 +35,82 @@ public class Command {
 
         for(int index = 0; index < arguments.size(); index++)
         {
-            if(arguments.get(index).named)
+            String argumentName = arguments.get(index).name;
+            Object object = null;
+
+            // Parse integer
+            if(arguments.get(index).type == int.class && arguments.get(index).range == null)
             {
-                parseNamedArgument(index);
+                object = parseInteger(index, argumentName);
             }
-            else
+            // Parse integer w/ range
+            else if(arguments.get(index).type == int.class)
             {
-                parsePositionalArgument(index);
+                object = parseIntegerRange(index, argumentName);
             }
+            // Parse double
+            else if(arguments.get(index).type == double.class)
+            {
+                object = parseDouble(index, argumentName);
+            }
+
+            //TODO
+
+            result.put(argumentName, object);
         }
 
         return result;
     }
 
-    private void parsePositionalArgument(int index) throws NumberFormatException
+    private int parseInteger(int index, String argumentName) throws NumberFormatException
     {
-        String name = arguments.get(index).name;
+        int integer;
 
-        //Parse integer
-        if(arguments.get(index).type == int.class && arguments.get(index).range == null)
+        if(arguments.get(index).named)
         {
-            int integer = parser.parseInt(lexer.get_positional_arguments().get(index));
-            result.put(name, integer);
+            integer = parser.parseInt(lexer.get_named_arguments().get(argumentName));
         }
-        //Parse integer w/ range
-        if(arguments.get(index).type == int.class)
-        {
-            int integer = parser.parseIntRange(lexer.get_positional_arguments().get(index),
-                    arguments.get(index).range[0],
-                    arguments.get(index).range[1]);
-            result.put(name, integer);
-        }
-        //Parse double
-        else if(arguments.get(index).type == double.class)
-        {
-            double number = parser.parseDouble(lexer.get_positional_arguments().get(index));
-            result.put(name, number);
-        }
-        //Parse boolean
-        else if(arguments.get(index).type == boolean.class)
-        {
-            //TODO
-        }
-        //Parse string
-        else if(arguments.get(index).type == String.class)
-        {
-            //TODO
-        }
-        //Parse custom type
         else
         {
-            //TODO
+            integer = parser.parseInt(lexer.get_positional_arguments().get(index));
         }
+
+        return integer;
     }
 
-    private void parseNamedArgument(int index) throws NumberFormatException
+    private int parseIntegerRange(int index, String argumentName) throws NumberFormatException
     {
-        String name = arguments.get(index).name;
+        int integer;
 
-        //Parse integer
-        if(arguments.get(index).type == int.class && arguments.get(index).range == null)
+        if(arguments.get(index).named)
         {
-            int integer = parser.parseInt(lexer.get_named_arguments().get(name));
-            result.put(name, integer);
-        }
-        //Parse integer w/ range
-        if(arguments.get(index).type == int.class)
-        {
-            int integer = parser.parseIntRange(lexer.get_named_arguments().get(name),
+            integer = parser.parseIntRange(lexer.get_named_arguments().get(argumentName),
                     arguments.get(index).range[0],
                     arguments.get(index).range[1]);
-            result.put(name, integer);
         }
-        //Parse double
-        else if(arguments.get(index).type == double.class)
-        {
-            double number = parser.parseDouble(lexer.get_named_arguments().get(name));
-            result.put(name, number);
-        }
-        //Parse boolean
-        else if(arguments.get(index).type == boolean.class)
-        {
-            //TODO
-        }
-        //Parse string
-        else if(arguments.get(index).type == String.class)
-        {
-            //TODO
-        }
-        //Parse custom type
         else
         {
-            //TODO
+            integer = parser.parseIntRange(lexer.get_positional_arguments().get(index),
+                    arguments.get(index).range[0],
+                    arguments.get(index).range[1]);
         }
+
+        return integer;
+    }
+
+    private double parseDouble(int index, String argumentName) throws NumberFormatException
+    {
+        double number;
+
+        if(arguments.get(index).named)
+        {
+            number = parser.parseDouble(lexer.get_named_arguments().get(argumentName));
+        }
+        else
+        {
+            number = parser.parseDouble(lexer.get_positional_arguments().get(index));
+        }
+
+        return number;
     }
 }

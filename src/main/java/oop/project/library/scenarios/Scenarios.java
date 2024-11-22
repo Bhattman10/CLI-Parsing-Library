@@ -63,7 +63,7 @@ public class Scenarios {
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
 
-        Command command = new Command("add");
+        Command command = new Command();
         command.addArgument(Argument.Builder.newInstance()
                 .setName("left")
                 .setType(int.class)
@@ -85,7 +85,7 @@ public class Scenarios {
 
     private static Result<Map<String, Object>> sub(String arguments) {
 
-        Command command = new Command("sub");
+        Command command = new Command();
         command.addArgument(Argument.Builder.newInstance()
                 .setName("left")
                 .setNamed()
@@ -115,7 +115,7 @@ public class Scenarios {
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
 
-        Command command = new Command("fizzbuzz");
+        Command command = new Command();
         command.addArgument(Argument.Builder.newInstance()
                 .setName("number")
                 .setType(int.class)
