@@ -13,12 +13,22 @@ public class Command {
     private Lexer lexer;
     private final Parser parser = new Parser();
     private final List<Argument> arguments = new ArrayList<>();
+    int positionalArgumentSize = 0, namedArgumentSize = 0;
     private final Map<String, Object> result = new HashMap<>();
 
     public Command() {}
 
     public void addArgument(Argument argument)
     {
+        if(argument.named)
+        {
+            namedArgumentSize++;
+        }
+        else
+        {
+            positionalArgumentSize++;
+        }
+
         arguments.add(argument);
     }
 
@@ -26,9 +36,13 @@ public class Command {
     {
         lexer = new Lexer(input);
 
-        if(lexer.get_all_arguments().size() > arguments.size())
+        if(lexer.get_positional_arguments().size() > positionalArgumentSize)
         {
-            throw new Exception("Too many arguments");
+            throw new Exception("Too many positional arguments");
+        }
+        else if(lexer.get_named_arguments().size() > namedArgumentSize)
+        {
+            throw new Exception("Too many named arguments");
         }
 
         for(int index = 0; index < arguments.size(); index++)
@@ -38,7 +52,7 @@ public class Command {
 
             // Use default value upon mismatch
             if((arguments.get(index).named && arguments.get(index).default_value != null && !lexer.get_named_arguments().containsKey(argumentName))
-                    || (arguments.get(index).default_value != null && index >= lexer.get_positional_arguments().size()))
+                    || (!arguments.get(index).named && arguments.get(index).default_value != null && index == lexer.get_positional_arguments().size()))
             {
                 object = arguments.get(index).default_value;
             }
@@ -56,6 +70,11 @@ public class Command {
             else if(arguments.get(index).type == String.class)
             {
                 object = parseString(index, argumentName);
+            }
+            // Parse boolean
+            else if(arguments.get(index).type == Boolean.class)
+            {
+                object = parseBoolean(index, argumentName);
             }
 
             //TODO
@@ -100,45 +119,61 @@ public class Command {
 
     private double parseDouble(int index, String argumentName) throws NumberFormatException
     {
-        double number;
+        double doubleNumber;
 
         if(arguments.get(index).named)
         {
-            number = parser.parseDouble(lexer.get_named_arguments().get(argumentName));
+            doubleNumber = parser.parseDouble(lexer.get_named_arguments().get(argumentName));
         }
         else
         {
-            number = parser.parseDouble(lexer.get_positional_arguments().get(index));
+            doubleNumber = parser.parseDouble(lexer.get_positional_arguments().get(index));
         }
 
-        return number;
+        return doubleNumber;
     }
 
     private String parseString(int index, String argumentName) throws Exception
     {
-        String choice;
+        String str;
 
         //Parse named string arguments w/ choices
         if(arguments.get(index).named && arguments.get(index).choices != null)
         {
-            choice = parser.parseStringChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
+            str = parser.parseStringChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
         }
         //Parse positional string arguments w/ choices
         else if(arguments.get(index).choices != null)
         {
-            choice = parser.parseStringChoices(lexer.get_positional_arguments().get(index), arguments.get(index).choices);
+            str = parser.parseStringChoices(lexer.get_positional_arguments().get(index), arguments.get(index).choices);
         }
         //Parse named string arguments
-        if(arguments.get(index).named)
+        else if(arguments.get(index).named)
         {
-            choice = parser.parseString(lexer.get_named_arguments().get(argumentName));
+            str = parser.parseString(lexer.get_named_arguments().get(argumentName));
         }
         //Parse positional string arguments
         else
         {
-            choice = parser.parseString(lexer.get_positional_arguments().get(index));
+            str = parser.parseString(lexer.get_positional_arguments().get(index));
         }
 
-        return choice;
+        return str;
+    }
+
+    private Boolean parseBoolean(int index, String argumentName) throws Exception
+    {
+        boolean bool;
+
+        if(arguments.get(index).named)
+        {
+            bool = parser.parseBoolean(lexer.get_named_arguments().get(argumentName));
+        }
+        else
+        {
+            bool = parser.parseBoolean(lexer.get_positional_arguments().get(index));
+        }
+
+        return bool;
     }
 }

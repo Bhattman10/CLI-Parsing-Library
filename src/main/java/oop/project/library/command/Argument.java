@@ -9,7 +9,6 @@ public class Argument {
     public String[] choices;
     public Object default_value;
 
-
     public Argument(Builder builder)
     {
         this.name = builder.name;

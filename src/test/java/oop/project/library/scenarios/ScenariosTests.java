@@ -194,9 +194,9 @@ class ScenariosTests {
 
     private static Stream<Arguments> testEcho() {
         return Stream.of(
-//            Arguments.of("Default", """
-//                echo
-//                """, Map.of("message", "Echo, echo, echo...")),
+            Arguments.of("Default", """
+                echo
+                """, Map.of("message", "Echo, echo, echo...")),
             Arguments.of("Message", """
                 echo message
                 """, Map.of("message", "message")),

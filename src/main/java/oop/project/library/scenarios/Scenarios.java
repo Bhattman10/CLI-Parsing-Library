@@ -159,7 +159,6 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> echo(String arguments) {
 
         Command command = new Command();
@@ -181,33 +180,25 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> search(String arguments) {
+
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("term")
+                .setType(String.class)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("--case-insensitive")
+                .setType(Boolean.class)
+                .setDefault(false)
+                .build());
 
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-
-            if(lexer.get_positional_arguments().size() != 1)
-            {
-                throw new Exception("Invalid number of positional arguments.");
-            }
-
-            if(lexer.get_named_arguments().size() > 1)
-            {
-                throw new Exception("Too many named arguments.");
-            }
-
-            String term = parser.parseString(lexer.get_positional_arguments().getFirst());
-
-            if(lexer.get_named_arguments().containsKey("case-insensitive"))
-            {
-                Boolean flag = parser.parseBoolean(lexer.get_named_arguments().get("case-insensitive"));
-                return new Result.Success<>(Map.of("term", term, "case-insensitive", flag));
-            }
-
-            return new Result.Success<>(Map.of("term", term, "case-insensitive", false));
+            var parsed = command.parseArgs(arguments);
+            String term = (String) parsed.get("term");
+            Boolean caseInsensitive = (Boolean) parsed.get("case-insensitive");
+            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseInsensitive));
         }
         catch (Exception e)
         {
