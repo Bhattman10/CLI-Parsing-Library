@@ -7,6 +7,7 @@ public class Argument {
     public Object type;
     public int[] range;
     public String[] choices;
+    public Object default_value;
 
 
     public Argument(Builder builder)
@@ -16,6 +17,7 @@ public class Argument {
         this.type = builder.type;
         this.range = builder.range;
         this.choices = builder.choices;
+        this.default_value = builder.default_value;
     }
 
     // Static class Builder
@@ -27,6 +29,7 @@ public class Argument {
         public Object type;
         public int[] range;
         public String[] choices;
+        public Object default_value;
 
         public static Builder newInstance()
         {
@@ -64,6 +67,11 @@ public class Argument {
         public Builder setChoices(String[] choices)
         {
             this.choices = choices;
+            return this;
+        }
+        public Builder setDefault(Object input)
+        {
+            this.default_value = input;
             return this;
         }
 

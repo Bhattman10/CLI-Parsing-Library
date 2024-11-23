@@ -36,25 +36,26 @@ public class Command {
             String argumentName = arguments.get(index).name;
             Object object = null;
 
-            // Parse integer
-            if(arguments.get(index).type == int.class && arguments.get(index).range == null)
+            // Use default value upon mismatch
+            if((arguments.get(index).named && arguments.get(index).default_value != null && !lexer.get_named_arguments().containsKey(argumentName))
+                    || (arguments.get(index).default_value != null && index >= lexer.get_positional_arguments().size()))
             {
-                object = parseInteger(index, argumentName);
+                object = arguments.get(index).default_value;
             }
-            // Parse integer w/ range
+            // Parse integer
             else if(arguments.get(index).type == int.class)
             {
-                object = parseIntegerRange(index, argumentName);
+                object = parseInteger(index, argumentName);
             }
             // Parse double
             else if(arguments.get(index).type == double.class)
             {
                 object = parseDouble(index, argumentName);
             }
-            // Parse string choices
-            else if(arguments.get(index).choices != null)
+            // Parse string
+            else if(arguments.get(index).type == String.class)
             {
-                object = parseStringChoices(index, argumentName);
+                object = parseString(index, argumentName);
             }
 
             //TODO
@@ -69,33 +70,29 @@ public class Command {
     {
         int integer;
 
-        if(arguments.get(index).named)
-        {
-            integer = parser.parseInt(lexer.get_named_arguments().get(argumentName));
-        }
-        else
-        {
-            integer = parser.parseInt(lexer.get_positional_arguments().get(index));
-        }
-
-        return integer;
-    }
-
-    private int parseIntegerRange(int index, String argumentName) throws NumberFormatException
-    {
-        int integer;
-
-        if(arguments.get(index).named)
+        //Parse named int arguments w/ ranges
+        if(arguments.get(index).named && arguments.get(index).range != null)
         {
             integer = parser.parseIntRange(lexer.get_named_arguments().get(argumentName),
                     arguments.get(index).range[0],
                     arguments.get(index).range[1]);
         }
-        else
+        //Parse positional int arguments w/ ranges
+        else if(arguments.get(index).range != null)
         {
             integer = parser.parseIntRange(lexer.get_positional_arguments().get(index),
                     arguments.get(index).range[0],
                     arguments.get(index).range[1]);
+        }
+        //Parse named int arguments
+        else if(arguments.get(index).named)
+        {
+            integer = parser.parseInt(lexer.get_named_arguments().get(argumentName));
+        }
+        //Parse positional int arguments
+        else
+        {
+            integer = parser.parseInt(lexer.get_positional_arguments().get(index));
         }
 
         return integer;
@@ -117,17 +114,29 @@ public class Command {
         return number;
     }
 
-    private String parseStringChoices(int index, String argumentName) throws Exception
+    private String parseString(int index, String argumentName) throws Exception
     {
         String choice;
 
-        if(arguments.get(index).named)
+        //Parse named string arguments w/ choices
+        if(arguments.get(index).named && arguments.get(index).choices != null)
         {
             choice = parser.parseStringChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
         }
-        else
+        //Parse positional string arguments w/ choices
+        else if(arguments.get(index).choices != null)
         {
             choice = parser.parseStringChoices(lexer.get_positional_arguments().get(index), arguments.get(index).choices);
+        }
+        //Parse named string arguments
+        if(arguments.get(index).named)
+        {
+            choice = parser.parseString(lexer.get_named_arguments().get(argumentName));
+        }
+        //Parse positional string arguments
+        else
+        {
+            choice = parser.parseString(lexer.get_positional_arguments().get(index));
         }
 
         return choice;

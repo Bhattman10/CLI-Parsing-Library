@@ -75,7 +75,10 @@ public class Scenarios {
 
         try
         {
-            return new Result.Success<>(command.parseArgs(arguments));
+            var parsed = command.parseArgs(arguments);
+            int left = (int) parsed.get("left");
+            int right = (int) parsed.get("right");
+            return new Result.Success<>(Map.of("left", left, "right", right));
         }
         catch (Exception e)
         {
@@ -97,7 +100,10 @@ public class Scenarios {
 
         try
         {
-            return new Result.Success<>(command.parseArgs(arguments));
+            var parsed = command.parseArgs(arguments);
+            double left = (double) parsed.get("left");
+            double right = (double) parsed.get("right");
+            return new Result.Success<>(Map.of("left", left, "right", right));
         }
         catch (Exception e)
         {
@@ -122,7 +128,9 @@ public class Scenarios {
 
         try
         {
-            return new Result.Success<>(command.parseArgs(arguments));
+            var parsed = command.parseArgs(arguments);
+            int number = (int) parsed.get("number");
+            return new Result.Success<>(Map.of("number", number));
         }
         catch (Exception e)
         {
@@ -141,7 +149,9 @@ public class Scenarios {
 
         try
         {
-            return new Result.Success<>(command.parseArgs(arguments));
+            var parsed = command.parseArgs(arguments);
+            String difficulty = (String) parsed.get("difficulty");
+            return new Result.Success<>(Map.of("difficulty", difficulty));
         }
         catch (Exception e)
         {
@@ -152,35 +162,18 @@ public class Scenarios {
     //TODO
     private static Result<Map<String, Object>> echo(String arguments) {
 
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("message")
+                .setType(String.class)
+                .setDefault("Echo, echo, echo...")
+                .build());
+
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-            String message;
-
-            if(lexer.get_named_arguments().size() > 1)
-            {
-                throw new Exception("Too many named arguments.");
-            }
-
-            if(lexer.get_positional_arguments().size() > 1)
-            {
-                throw new Exception("Too many positional arguments.");
-            }
-
-            // Argument is a positional argument
-            if(lexer.get_positional_arguments().size() == 1)
-            {
-                message = parser.parseString(lexer.get_positional_arguments().getFirst());
-            }
-            // Argument is a named argument
-            else
-            {
-                message = parser.parseString(lexer.get_named_arguments().get("message"));
-            }
-
-            return new Result.Success<>(Map.of("message", Objects.requireNonNullElse(message, "Echo, echo, echo...")));
-
+            var parsed = command.parseArgs(arguments);
+            String message = (String) parsed.get("message");
+            return new Result.Success<>(Map.of("message", message));
         }
         catch (Exception e)
         {
