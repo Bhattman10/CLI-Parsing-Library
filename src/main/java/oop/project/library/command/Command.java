@@ -1,7 +1,7 @@
 package oop.project.library.command;
 
 import oop.project.library.lexer.Lexer;
-import oop.project.library.parser.Parser;
+import oop.project.library.parser.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +11,10 @@ import java.util.Map;
 public class Command {
 
     private Lexer lexer;
-    private final Parser parser = new Parser();
     private final List<Argument> arguments = new ArrayList<>();
     int positionalArgumentSize = 0, namedArgumentSize = 0;
     private final Map<String, Object> result = new HashMap<>();
+    private int positionalIndex = 0;
 
     public Command() {}
 
@@ -76,8 +76,11 @@ public class Command {
             {
                 object = parseBoolean(index, argumentName);
             }
-
-            //TODO
+            // Parse custom
+            else
+            {
+                object = parseCustom(index, argumentName);
+            }
 
             result.put(argumentName, object);
         }
@@ -85,33 +88,34 @@ public class Command {
         return result;
     }
 
-    private int parseInteger(int index, String argumentName) throws NumberFormatException
+    private int parseInteger(int index, String argumentName)
     {
+        IntegerParser intParser = new IntegerParser();
         int integer;
 
         //Parse named int arguments w/ ranges
         if(arguments.get(index).named && arguments.get(index).range != null)
         {
-            integer = parser.parseIntRange(lexer.get_named_arguments().get(argumentName),
+            integer = intParser.parseRange(lexer.get_named_arguments().get(argumentName),
                     arguments.get(index).range[0],
                     arguments.get(index).range[1]);
         }
         //Parse positional int arguments w/ ranges
         else if(arguments.get(index).range != null)
         {
-            integer = parser.parseIntRange(lexer.get_positional_arguments().get(index),
+            integer = intParser.parseRange(lexer.get_positional_arguments().get(positionalIndex++),
                     arguments.get(index).range[0],
                     arguments.get(index).range[1]);
         }
         //Parse named int arguments
         else if(arguments.get(index).named)
         {
-            integer = parser.parseInt(lexer.get_named_arguments().get(argumentName));
+            integer = intParser.parse(lexer.get_named_arguments().get(argumentName));
         }
         //Parse positional int arguments
         else
         {
-            integer = parser.parseInt(lexer.get_positional_arguments().get(index));
+            integer = intParser.parse(lexer.get_positional_arguments().get(positionalIndex++));
         }
 
         return integer;
@@ -119,15 +123,16 @@ public class Command {
 
     private double parseDouble(int index, String argumentName) throws NumberFormatException
     {
+        DoubleParser doubleParser = new DoubleParser();
         double doubleNumber;
 
         if(arguments.get(index).named)
         {
-            doubleNumber = parser.parseDouble(lexer.get_named_arguments().get(argumentName));
+            doubleNumber = doubleParser.parse(lexer.get_named_arguments().get(argumentName));
         }
         else
         {
-            doubleNumber = parser.parseDouble(lexer.get_positional_arguments().get(index));
+            doubleNumber = doubleParser.parse(lexer.get_positional_arguments().get(positionalIndex++));
         }
 
         return doubleNumber;
@@ -135,45 +140,55 @@ public class Command {
 
     private String parseString(int index, String argumentName) throws Exception
     {
-        String str;
+        StringParser stringParser = new StringParser();
+        String string;
 
         //Parse named string arguments w/ choices
         if(arguments.get(index).named && arguments.get(index).choices != null)
         {
-            str = parser.parseStringChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
+            string = stringParser.parseChoices(lexer.get_named_arguments().get(argumentName), arguments.get(index).choices);
         }
         //Parse positional string arguments w/ choices
         else if(arguments.get(index).choices != null)
         {
-            str = parser.parseStringChoices(lexer.get_positional_arguments().get(index), arguments.get(index).choices);
+            string = stringParser.parseChoices(lexer.get_positional_arguments().get(positionalIndex++), arguments.get(index).choices);
         }
         //Parse named string arguments
         else if(arguments.get(index).named)
         {
-            str = parser.parseString(lexer.get_named_arguments().get(argumentName));
+            string = stringParser.parse(lexer.get_named_arguments().get(argumentName));
         }
         //Parse positional string arguments
         else
         {
-            str = parser.parseString(lexer.get_positional_arguments().get(index));
+            string = stringParser.parse(lexer.get_positional_arguments().get(positionalIndex++));
         }
 
-        return str;
+        return string;
     }
 
     private Boolean parseBoolean(int index, String argumentName) throws Exception
     {
+        BooleanParser booleanParser = new BooleanParser();
         boolean bool;
 
+        //Parse named boolean arguments
         if(arguments.get(index).named)
         {
-            bool = parser.parseBoolean(lexer.get_named_arguments().get(argumentName));
+            bool = booleanParser.parse(lexer.get_named_arguments().get(argumentName));
         }
+        //Parse positional boolean arguments
         else
         {
-            bool = parser.parseBoolean(lexer.get_positional_arguments().get(index));
+            bool = booleanParser.parse(lexer.get_positional_arguments().get(positionalIndex++));
         }
 
         return bool;
+    }
+
+    private Object parseCustom(int index, String argumentName) throws Exception
+    {
+        //Parses positional arguments with their custom parsers
+        return Parser.useParser(arguments.get(index).customParser, lexer.get_positional_arguments().get(positionalIndex++));
     }
 }

@@ -208,20 +208,17 @@ public class Scenarios {
 
     //TODO
     private static Result<Map<String, Object>> weekday(String arguments) {
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("date")
+                .setType(LocalDate.class)
+                .setParser(LocalDate::parse)
+                .build());
+
         try
         {
-            Lexer lexer = new Lexer(arguments);
-            Parser parser = new Parser();
-
-            if(lexer.get_positional_arguments().size() != 1)
-            {
-                throw new Exception("Invalid number of positional arguments.");
-            }
-
-            parser.registerCustomParser(LocalDate.class, LocalDate::parse);
-
-            LocalDate date = parser.parseCustom(lexer.get_positional_arguments().getFirst(), LocalDate.class);
-
+            var parsed = command.parseArgs(arguments);
+            LocalDate date = (LocalDate) parsed.get("date");
             return new Result.Success<>(Map.of("date", date));
         }
         catch (Exception e)
@@ -229,5 +226,4 @@ public class Scenarios {
             return new Result.Failure<>(e.getMessage());
         }
     }
-
 }

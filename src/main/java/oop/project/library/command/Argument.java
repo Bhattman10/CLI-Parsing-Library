@@ -1,5 +1,7 @@
 package oop.project.library.command;
 
+import oop.project.library.parser.Parser;
+
 public class Argument {
 
     public String name;
@@ -8,6 +10,7 @@ public class Argument {
     public int[] range;
     public String[] choices;
     public Object default_value;
+    public Parser<?> customParser;
 
     public Argument(Builder builder)
     {
@@ -17,6 +20,7 @@ public class Argument {
         this.range = builder.range;
         this.choices = builder.choices;
         this.default_value = builder.default_value;
+        this.customParser = builder.customParser;
     }
 
     // Static class Builder
@@ -29,6 +33,7 @@ public class Argument {
         public int[] range;
         public String[] choices;
         public Object default_value;
+        public Parser<?> customParser;
 
         public static Builder newInstance()
         {
@@ -71,6 +76,11 @@ public class Argument {
         public Builder setDefault(Object input)
         {
             this.default_value = input;
+            return this;
+        }
+        public Builder setParser(Parser<?> customParser)
+        {
+            this.customParser = customParser;
             return this;
         }
 
