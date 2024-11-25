@@ -252,6 +252,41 @@ class ScenariosTests {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource
+    public void extraTests(String name, String command, Map<String, Object> expected) {
+        test(command, expected);
+    }
+
+    private static Stream<Arguments> extraTests() {
+        return Stream.of(
+                Arguments.of("ADD: Larger Numbers", """
+                add 100 200
+                """, Map.of("left", 100, "right", 200)),
+                Arguments.of("SUB: Infinity", """
+                sub --left 1.0 --right Infinity
+                """, Map.of("left", 1.0, "right", Double.POSITIVE_INFINITY)),
+                Arguments.of("FIZZBUZZ: Out of Range (Positive)", """
+                fizzbuzz 200
+                """, null),
+                Arguments.of("FIZZBUZZ: Out of Range (Negative)", """
+                fizzbuzz -10
+                """, null),
+                Arguments.of("FIZZBUZZ: Decimal", """
+                fizzbuzz 20.0
+                """, null),
+                Arguments.of("WEEKDAY: Invalid Day", """
+                weekday 2024-10-32
+                """, null),
+                Arguments.of("ECHO: Multiple Messages", """
+                echo Hello World!
+                """, null),
+                Arguments.of("SEARCH: Flag", """
+                search aPPle pIe case-sensitive true
+                """, null)
+        );
+    }
+
     private static void test(String command, Map<String, Object> expected) {
         var result = Scenarios.parse(command.stripTrailing()); //trailing newline
         if (expected != null) {
