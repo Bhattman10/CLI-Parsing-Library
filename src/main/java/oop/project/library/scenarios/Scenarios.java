@@ -77,8 +77,8 @@ public class Scenarios {
         try
         {
             var parsed = command.parseArgs(arguments);
-            int left = (Integer) parsed.get("left");
-            int right = (Integer) parsed.get("right");
+            int left = (int) parsed.get("left");
+            int right = (int) parsed.get("right");
             return new Result.Success<>(Map.of("left", left, "right", right));
         }
         catch (Exception e)
@@ -87,13 +87,31 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> sub(String arguments) {
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("--left")
+                .setType(Double.class)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("--right")
+                .setType(Double.class)
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            double left = (double) parsed.get("left");
+            double right = (double) parsed.get("right");
+            return new Result.Success<>(Map.of("left", left, "right", right));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
-    //TODO
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {
         //Note: This is the first command your library may not support all the
         //functionality to implement yet. This is fine - parse the number like
@@ -102,7 +120,23 @@ public class Scenarios {
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("number")
+                .setType(Integer.class)
+                .setRange(1, 100)
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            int number = (int) parsed.get("number");
+            return new Result.Success<>(Map.of("number", number));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     //TODO

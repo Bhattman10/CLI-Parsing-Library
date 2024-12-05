@@ -47,6 +47,10 @@ public class Argument {
             {
                 this.parser = new BooleanParser();
             }
+            else
+            {
+                //TODO: custom parser
+            }
 
             return this;
         }
@@ -65,7 +69,7 @@ public class Argument {
             return this;
         }
 
-        //TODO
+        //TODO: implement more builder methods
 
         public Builder setOptional(Boolean bool)
         {

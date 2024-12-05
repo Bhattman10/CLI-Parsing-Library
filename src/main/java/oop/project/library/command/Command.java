@@ -2,7 +2,6 @@ package oop.project.library.command;
 
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Command {
         arguments.add(argument);
     }
 
-    //TODO
+    //TODO: optional argument validation
     public Map<String, Object> parseArgs(String input) throws java.text.ParseException {
 
         Lexer lexer = new Lexer(input);
@@ -49,7 +48,7 @@ public class Command {
 
             if(argument.name.startsWith("--"))
             {
-                result.put(argument.name, Parser.useParser(argument.type, lexer.get_named_arguments().get(argument.name.substring(1))));
+                result.put(argument.name.substring(2), Parser.useParser(argument.type, lexer.get_named_arguments().get(argument.name.substring(2))));
             }
             else
             {
