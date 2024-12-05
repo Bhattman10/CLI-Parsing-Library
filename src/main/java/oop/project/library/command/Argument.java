@@ -1,86 +1,75 @@
 package oop.project.library.command;
-
-import oop.project.library.parser.Parser;
+import oop.project.library.parser.*;
 
 public class Argument {
 
     public String name;
-    public Boolean named;
-    public Object type;
-    public int[] range;
-    public String[] choices;
-    public Object default_value;
-    public Parser<?> customParser;
+    public Parser<?> type;
+    public Boolean optional;
 
-    public Argument(Builder builder)
-    {
+    public Argument(Builder builder) {
+
         this.name = builder.name;
-        this.named = builder.named;
-        this.type = builder.type;
-        this.range = builder.range;
-        this.choices = builder.choices;
-        this.default_value = builder.default_value;
-        this.customParser = builder.customParser;
+        this.type = builder.parser;
+        this.optional = builder.optional;
     }
 
-    // Static class Builder
-    //https://www.geeksforgeeks.org/builder-pattern-in-java/
     public static class Builder {
 
-        public String name;
-        public Boolean named;
-        public Object type;
-        public int[] range;
-        public String[] choices;
-        public Object default_value;
-        public Parser<?> customParser;
+        private String name;
+        private Parser<?> parser;
+        private Boolean optional;
 
-        public static Builder newInstance()
-        {
-            return new Builder();
-        }
-
+        public static Builder newInstance() { return new Builder(); }
         private Builder() {}
 
         public Builder setName(String name)
         {
-            if(name.startsWith("--"))
+            this.name = name;
+            return this;
+        }
+
+        public Builder setType(Object type)
+        {
+            if(type == Integer.class || type == int.class)
             {
-                this.name = name.substring(2);
-                this.named = true;
+                this.parser = new IntegerParser();
+            }
+            else if(type == Double.class || type == double.class)
+            {
+                this.parser = new DoubleParser();
+            }
+            else if(type == String.class)
+            {
+                this.parser = new StringParser();
+            }
+            else if(type == Boolean.class || type == boolean.class)
+            {
+                this.parser = new BooleanParser();
+            }
+
+            return this;
+        }
+
+        public Builder setRange(int bottom, int top)
+        {
+            if(this.parser instanceof IntegerParser)
+            {
+                ((IntegerParser) this.parser).setRange(bottom, top);
             }
             else
             {
-                this.name = name;
-                this.named = false;
+                throw new IllegalArgumentException("Invalid attempt to add range to type that is not an integer.");
             }
+
             return this;
         }
-        public Builder setType(Object type)
+
+        //TODO
+
+        public Builder setOptional(Boolean bool)
         {
-            this.type = type;
-            return this;
-        }
-        public Builder setRange(int bottom, int top)
-        {
-            this.range = new int[2];
-            this.range[0] = bottom;
-            this.range[1] = top;
-            return this;
-        }
-        public Builder setChoices(String[] choices)
-        {
-            this.choices = choices;
-            return this;
-        }
-        public Builder setDefault(Object input)
-        {
-            this.default_value = input;
-            return this;
-        }
-        public Builder setParser(Parser<?> customParser)
-        {
-            this.customParser = customParser;
+            this.optional = bool;
             return this;
         }
 

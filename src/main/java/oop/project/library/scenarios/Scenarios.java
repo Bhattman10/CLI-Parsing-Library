@@ -3,6 +3,7 @@ package oop.project.library.scenarios;
 import oop.project.library.command.Argument;
 import oop.project.library.command.Command;
 import oop.project.library.lexer.Lexer;
+import oop.project.library.parser.IntegerParser;
 import oop.project.library.parser.Parser;
 
 import java.time.LocalDate;
@@ -66,139 +67,19 @@ public class Scenarios {
         Command command = new Command();
         command.addArgument(Argument.Builder.newInstance()
                 .setName("left")
-                .setType(int.class)
+                .setType(Integer.class)
                 .build());
         command.addArgument(Argument.Builder.newInstance()
                 .setName("right")
-                .setType(int.class)
+                .setType(Integer.class)
                 .build());
 
         try
         {
             var parsed = command.parseArgs(arguments);
-            int left = (int) parsed.get("left");
-            int right = (int) parsed.get("right");
+            int left = (Integer) parsed.get("left");
+            int right = (Integer) parsed.get("right");
             return new Result.Success<>(Map.of("left", left, "right", right));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
-    }
-
-    private static Result<Map<String, Object>> sub(String arguments) {
-
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("--left")
-                .setType(double.class)
-                .build());
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("--right")
-                .setType(double.class)
-                .build());
-
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            double left = (double) parsed.get("left");
-            double right = (double) parsed.get("right");
-            return new Result.Success<>(Map.of("left", left, "right", right));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
-    }
-
-    private static Result<Map<String, Object>> fizzbuzz(String arguments) {
-        //Note: This is the first command your library may not support all the
-        //functionality to implement yet. This is fine - parse the number like
-        //normal, then check the range manually. The goal is to get a feel for
-        //the validation involved even if it's not in the library yet.
-        //var number = IntegerParser.parse(lexedArguments.get("number"));
-        //if (number < 1 || number > 100) ...
-
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("number")
-                .setType(int.class)
-                .setRange(1, 100)
-                .build());
-
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            int number = (int) parsed.get("number");
-            return new Result.Success<>(Map.of("number", number));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
-    }
-
-    private static Result<Map<String, Object>> difficulty(String arguments) {
-
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("difficulty")
-                .setType(String.class)
-                .setChoices(new String[]{"easy", "normal", "hard", "peaceful"})
-                .build());
-
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            String difficulty = (String) parsed.get("difficulty");
-            return new Result.Success<>(Map.of("difficulty", difficulty));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
-    }
-
-    private static Result<Map<String, Object>> echo(String arguments) {
-
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("message")
-                .setType(String.class)
-                .setDefault("Echo, echo, echo...")
-                .build());
-
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            String message = (String) parsed.get("message");
-            return new Result.Success<>(Map.of("message", message));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
-    }
-
-    private static Result<Map<String, Object>> search(String arguments) {
-
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("term")
-                .setType(String.class)
-                .build());
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("--case-insensitive")
-                .setType(Boolean.class)
-                .setDefault(false)
-                .build());
-
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            String term = (String) parsed.get("term");
-            Boolean caseInsensitive = (Boolean) parsed.get("case-insensitive");
-            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseInsensitive));
         }
         catch (Exception e)
         {
@@ -207,23 +88,44 @@ public class Scenarios {
     }
 
     //TODO
-    private static Result<Map<String, Object>> weekday(String arguments) {
-        Command command = new Command();
-        command.addArgument(Argument.Builder.newInstance()
-                .setName("date")
-                .setType(LocalDate.class)
-                .setParser(LocalDate::parse)
-                .build());
+    private static Result<Map<String, Object>> sub(String arguments) {
 
-        try
-        {
-            var parsed = command.parseArgs(arguments);
-            LocalDate date = (LocalDate) parsed.get("date");
-            return new Result.Success<>(Map.of("date", date));
-        }
-        catch (Exception e)
-        {
-            return new Result.Failure<>(e.getMessage());
-        }
+        return null;
+    }
+
+    //TODO
+    private static Result<Map<String, Object>> fizzbuzz(String arguments) {
+        //Note: This is the first command your library may not support all the
+        //functionality to implement yet. This is fine - parse the number like
+        //normal, then check the range manually. The goal is to get a feel for
+        //the validation involved even if it's not in the library yet.
+        //var number = IntegerParser.parse(lexedArguments.get("number"));
+        //if (number < 1 || number > 100) ...
+
+        return null;
+    }
+
+    //TODO
+    private static Result<Map<String, Object>> difficulty(String arguments) {
+
+        return null;
+    }
+
+    //TODO
+    private static Result<Map<String, Object>> echo(String arguments) {
+
+        return null;
+    }
+
+    //TODO
+    private static Result<Map<String, Object>> search(String arguments) {
+
+        return null;
+    }
+
+    //TODO
+    private static Result<Map<String, Object>> weekday(String arguments) {
+
+        return null;
     }
 }
