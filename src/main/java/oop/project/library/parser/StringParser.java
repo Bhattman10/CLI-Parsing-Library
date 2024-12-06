@@ -1,7 +1,5 @@
 package oop.project.library.parser;
 
-import java.util.ArrayList;
-
 public class StringParser implements Parser<String> {
 
     String[] choices;

@@ -1,6 +1,7 @@
 package oop.project.library.parser;
 
 public class DoubleParser implements Parser<Double> {
+
     @Override
     public Double parse(String value) throws ParseException {
 

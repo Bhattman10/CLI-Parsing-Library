@@ -160,21 +160,72 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> echo(String arguments) {
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("message")
+                .setType(String.class)
+                .setOptional("Echo, echo, echo...")
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            String message = (String) parsed.get("message");
+            return new Result.Success<>(Map.of("message", message));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     //TODO
     private static Result<Map<String, Object>> search(String arguments) {
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("term")
+                .setType(String.class)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("--case-insensitive")
+                .setType(Boolean.class)
+                .setOptional(false)
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            String term = (String) parsed.get("term");
+            Boolean caseInsensitive = (Boolean) parsed.get("case-insensitive");
+            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseInsensitive));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
-    //TODO
     private static Result<Map<String, Object>> weekday(String arguments) {
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("date")
+                .setType(LocalDate.class)
+                .setCustomParser(LocalDate::parse)
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            LocalDate date = (LocalDate) parsed.get("date");
+            return new Result.Success<>(Map.of("date", date));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 }

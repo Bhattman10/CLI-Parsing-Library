@@ -5,7 +5,7 @@ public class Argument {
 
     public String name;
     public Parser<?> type;
-    public Boolean optional;
+    public Object optional;
 
     public Argument(Builder builder) {
 
@@ -18,7 +18,7 @@ public class Argument {
 
         private String name;
         private Parser<?> parser;
-        private Boolean optional;
+        private Object optional;
 
         public static Builder newInstance() { return new Builder(); }
         private Builder() {}
@@ -46,10 +46,6 @@ public class Argument {
             else if(type == Boolean.class || type == boolean.class)
             {
                 this.parser = new BooleanParser();
-            }
-            else
-            {
-                //TODO: custom parser
             }
 
             return this;
@@ -83,11 +79,16 @@ public class Argument {
             return this;
         }
 
-        //TODO: implement more builder methods
-
-        public Builder setOptional(Boolean bool)
+        public Builder setOptional(Object value)
         {
-            this.optional = bool;
+
+            this.optional = value;
+            return this;
+        }
+
+        public Builder setCustomParser(Parser<?> parser)
+        {
+            this.parser = parser;
             return this;
         }
 

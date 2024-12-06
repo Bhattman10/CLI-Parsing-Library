@@ -13,9 +13,9 @@ public class Lexer {
     private int char_index = 0;
     private final int string_length;
 
-    private List<String> positional_arguments = new ArrayList<>();
-    private Map<String, String> named_arguments = new HashMap<>();
-    private Map<String, Object> all_arguments = new HashMap<>();
+    private final List<String> positional_arguments = new ArrayList<>();
+    private final Map<String, String> named_arguments = new HashMap<>();
+    private final Map<String, Object> all_arguments = new HashMap<>();
 
     public Lexer(String input) throws ParseException {
         this.arguments = input;
