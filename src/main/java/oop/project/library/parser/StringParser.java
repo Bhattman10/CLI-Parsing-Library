@@ -1,18 +1,28 @@
 package oop.project.library.parser;
 
+import java.util.ArrayList;
+
 public class StringParser implements Parser<String> {
-    @Override
-    public String parse(String value) throws ParseException {
-        return value;
+
+    String[] choices;
+
+    public void setChoices(String[] choices) {
+        this.choices = choices;
     }
 
-    public String parseChoices(String value, String[] choices) throws ParseException {
-        for(String choice : choices) {
-            if(value.equals(choice)) {
+    @Override
+    public String parse(String value) throws ParseException {
+
+        if (choices == null || choices.length == 0) {
+            return value;
+        }
+
+        for (String choice : choices) {
+            if (choice.equals(value)) {
                 return value;
             }
         }
 
-        throw new ParseException("Invalid choice");
+        throw new ParseException("String value does not match provided choices.");
     }
 }

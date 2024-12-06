@@ -139,10 +139,25 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> difficulty(String arguments) {
 
-        return null;
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("difficulty")
+                .setType(String.class)
+                .setChoices(new String[]{"easy", "normal", "hard", "peaceful"})
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            String difficulty = (String) parsed.get("difficulty");
+            return new Result.Success<>(Map.of("difficulty", difficulty));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
     //TODO

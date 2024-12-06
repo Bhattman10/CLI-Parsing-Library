@@ -63,7 +63,21 @@ public class Argument {
             }
             else
             {
-                throw new IllegalArgumentException("Invalid attempt to add range to type that is not an integer.");
+                throw new IllegalArgumentException("Cannot add range to type of class " + this.parser.getClass() + ".");
+            }
+
+            return this;
+        }
+
+        public Builder setChoices(String[] choices)
+        {
+            if(this.parser instanceof StringParser)
+            {
+                ((StringParser) this.parser).setChoices(choices);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Cannot add choices to type of class " + this.parser.getClass() + ".");
             }
 
             return this;
