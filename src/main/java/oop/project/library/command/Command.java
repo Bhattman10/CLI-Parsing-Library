@@ -12,8 +12,15 @@ public class Command {
     private int totalNumberLexedArguments = 0;
     private int positionalIndex = 0;
 
+    /**
+     * The first step in creating an argument is to initialize a command object.
+     */
     public Command() {}
 
+    /**
+     * Secondly, use addArgument to pass in arguments. You may pass in as many valid argument as needed.
+     * Reference the argument builder method notes on how to construct an argument and pass it into this method.
+     */
     public void addArgument(Argument argument)
     {
         if (!argumentNames.add(argument.name)) {
@@ -23,6 +30,9 @@ public class Command {
         arguments.add(argument);
     }
 
+    /**
+     * Finally, call this method to lex arguments and compare the given CLI arguments with the ones you created.
+     */
     public Map<String, Object> parseArgs(String input) throws java.text.ParseException {
 
         Lexer lexer = new Lexer(input);
