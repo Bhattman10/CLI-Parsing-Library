@@ -38,7 +38,7 @@ public class Lexer {
         return all_arguments;
     }
 
-    private void lex() throws ParseException
+    private void lex() throws LexException
     {
         while(char_index < string_length)
         {
@@ -51,7 +51,7 @@ public class Lexer {
                     && arguments.charAt(char_index+1) == '-'
                     && arguments.charAt(char_index+2) == '-')
             {
-                throw new ParseException("Invalid number of hyphens.", char_index);
+                throw new LexException("Invalid number of hyphens.");
             }
             else if(string_length - char_index > 2
                     && arguments.charAt(char_index) == '-'
@@ -69,7 +69,7 @@ public class Lexer {
         }
     }
 
-    private void lexPositional() throws ParseException
+    private void lexPositional() throws LexException
     {
         String flag_name = "", flag_value = "";
 
@@ -81,7 +81,7 @@ public class Lexer {
 
         if(flag_name.isEmpty())
         {
-            throw new ParseException("No flag name provided.", char_index);
+            throw new LexException("No flag name provided.");
         }
 
         //Iterate past white space
@@ -92,7 +92,7 @@ public class Lexer {
                 && arguments.charAt(char_index) == '-'
                 && arguments.charAt(char_index+1) == '-')
         {
-            throw new ParseException("Flag used instead of value.", char_index);
+            throw new LexException("Flag used instead of value.");
         }
 
         while(char_index < string_length && !Character.isWhitespace(arguments.charAt(char_index)))
@@ -103,7 +103,7 @@ public class Lexer {
 
         if(flag_value.isEmpty())
         {
-            throw new ParseException("No flag value provided.", char_index);
+            throw new LexException("No flag value provided.");
         }
 
         named_arguments.put(flag_name, flag_value);

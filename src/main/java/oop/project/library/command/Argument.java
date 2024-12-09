@@ -1,4 +1,5 @@
 package oop.project.library.command;
+import oop.project.library.lexer.LexException;
 import oop.project.library.parser.*;
 
 public class Argument {
@@ -59,7 +60,7 @@ public class Argument {
             }
             else
             {
-                throw new IllegalArgumentException("Cannot add range to type of class " + this.parser.getClass() + ".");
+                throw new ArgumentException("Cannot add range to type of class " + this.parser.getClass() + ".");
             }
 
             return this;
@@ -73,7 +74,7 @@ public class Argument {
             }
             else
             {
-                throw new IllegalArgumentException("Cannot add choices to type of class " + this.parser.getClass() + ".");
+                throw new ArgumentException("Cannot add choices to type of class " + this.parser.getClass() + ".");
             }
 
             return this;

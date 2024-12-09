@@ -2,7 +2,6 @@ package oop.project.library.command;
 
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parser.*;
-
 import java.util.*;
 
 public class Command {
@@ -18,7 +17,7 @@ public class Command {
     public void addArgument(Argument argument)
     {
         if (!argumentNames.add(argument.name)) {
-            throw new ParseException("Duplicate argument: " + argument.name);
+            throw new ArgumentException("Duplicate argument: " + argument.name);
         }
 
         arguments.add(argument);
@@ -42,13 +41,12 @@ public class Command {
         }
 
         if (totalNumberLexedArguments != 0)
-            throw new ParseException(totalNumberLexedArguments + " lexed arguments remaining.");
+            throw new ArgumentException(totalNumberLexedArguments + " lexed arguments remaining.");
 
         return result;
     }
 
-    private void parseNamedArguments(Lexer lexer, Argument argument) throws java.text.ParseException
-    {
+    private void parseNamedArguments(Lexer lexer, Argument argument) throws java.text.ParseException {
         try {
 
             String valueToParse = lexer.get_named_arguments().get(argument.name.substring(2));
@@ -59,7 +57,7 @@ public class Command {
 
             if (argument.optional == null)
             {
-                throw new ParseException("No argument passed in for " + argument.name);
+                throw new ArgumentException("No argument passed in for " + argument.name);
             }
             else
             {
@@ -69,8 +67,7 @@ public class Command {
         }
     }
 
-    private void parsePositionalArguments(Lexer lexer, Argument argument) throws java.text.ParseException
-    {
+    private void parsePositionalArguments(Lexer lexer, Argument argument) throws java.text.ParseException {
         try {
 
             String valueToParse = lexer.get_positional_arguments().get(positionalIndex);
@@ -82,7 +79,7 @@ public class Command {
 
             if (argument.optional == null) {
 
-                throw new ParseException("No argument passed in for " + argument.name);
+                throw new ArgumentException("No argument passed in for " + argument.name);
 
             } else {
 
