@@ -181,7 +181,6 @@ public class Scenarios {
         }
     }
 
-    //TODO
     private static Result<Map<String, Object>> search(String arguments) {
 
         Command command = new Command();

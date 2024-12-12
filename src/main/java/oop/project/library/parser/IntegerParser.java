@@ -2,8 +2,8 @@ package oop.project.library.parser;
 
 public class IntegerParser implements Parser<Integer> {
 
-    int bottomRange = Integer.MIN_VALUE;
     int topRange = Integer.MAX_VALUE;
+    int bottomRange = Integer.MIN_VALUE;
 
     public void setRange(int bottomRange, int topRange) {
         this.bottomRange = bottomRange;

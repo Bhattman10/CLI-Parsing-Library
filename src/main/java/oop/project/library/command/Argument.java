@@ -91,8 +91,23 @@ public class Argument {
             }
             else
             {
-                throw new ArgumentException("Cannot add range to type of class " + this.parser.getClass() + "." +
-                        "Ranges can only be used with default integer parser.");
+                throw new ArgumentException("Cannot add range of integers to type of class " + this.parser.getClass() + "." +
+                        "This range can only be used with default integer parser.");
+            }
+
+            return this;
+        }
+
+        public Builder setRange(double bottom, double top)
+        {
+            if(this.parser instanceof DoubleParser)
+            {
+                ((DoubleParser) this.parser).setRange(bottom, top);
+            }
+            else
+            {
+                throw new ArgumentException("Cannot add range of doubles to type of class " + this.parser.getClass() + "." +
+                        "This range can only be used with the default double parser.");
             }
 
             return this;
