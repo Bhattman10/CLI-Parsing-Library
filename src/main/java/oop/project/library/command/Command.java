@@ -33,7 +33,7 @@ public class Command {
     /**
      * Finally, call this method to lex arguments and compare the given CLI arguments with the ones you created.
      */
-    public Map<String, Object> parseArgs(String input) throws java.text.ParseException {
+    public Map<String, Object> parseArgs(String input) throws Exception {
 
         Lexer lexer = new Lexer(input);
         totalNumberLexedArguments = lexer.get_named_arguments().size() + lexer.get_positional_arguments().size();
@@ -56,7 +56,7 @@ public class Command {
         return result;
     }
 
-    private void parseNamedArguments(Lexer lexer, Argument argument) throws java.text.ParseException {
+    private void parseNamedArguments(Lexer lexer, Argument argument) throws Exception {
         try {
 
             String valueToParse = lexer.get_named_arguments().get(argument.name.substring(2));
@@ -67,7 +67,7 @@ public class Command {
 
             if (argument.optional == null)
             {
-                throw new ArgumentException("No argument passed in for " + argument.name);
+                throw new Exception(e);
             }
             else
             {
@@ -77,7 +77,7 @@ public class Command {
         }
     }
 
-    private void parsePositionalArguments(Lexer lexer, Argument argument) throws java.text.ParseException {
+    private void parsePositionalArguments(Lexer lexer, Argument argument) throws Exception {
         try {
 
             String valueToParse = lexer.get_positional_arguments().get(positionalIndex);
@@ -89,7 +89,7 @@ public class Command {
 
             if (argument.optional == null) {
 
-                throw new ArgumentException("No argument passed in for " + argument.name);
+                throw new Exception(e);
 
             } else {
 
