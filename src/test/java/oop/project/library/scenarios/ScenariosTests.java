@@ -222,6 +222,9 @@ class ScenariosTests {
                 """, Map.of("term", "ApPlE", "case-insensitive", true)),
             Arguments.of("Extraneous Argument", """
                 search apple pie
+                """, null),
+            Arguments.of("Incorrect Flag", """
+                search apple --case-insensitive 1
                 """, null)
         );
     }
@@ -249,6 +252,26 @@ class ScenariosTests {
             Arguments.of("Flag", """
                 weekday --flag 2024-10-23
                 """, null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    public void testOptionalBoss(String name, String command, Map<String, Object> expected) {
+        test(command, expected);
+    }
+
+    private static Stream<Arguments> testOptionalBoss() {
+        return Stream.of(
+                Arguments.of("Everything is Empty", """
+                optional_boss
+                """, Map.of("term1", 1, "term2", 2, "term3", 3)),
+                Arguments.of("Last Term is Empty", """
+                optional_boss 100 200
+                """, Map.of("term1", 100, "term2", 200, "term3", 3)),
+                Arguments.of("Second & Third Term is Empty", """
+                optional_boss 100
+                """, Map.of("term1", 100, "term2", 2, "term3", 3))
         );
     }
 

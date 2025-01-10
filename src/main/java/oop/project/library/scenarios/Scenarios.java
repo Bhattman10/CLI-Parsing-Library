@@ -30,6 +30,7 @@ public class Scenarios {
             case "echo" -> echo(arguments);
             case "search" -> search(arguments);
             case "weekday" -> weekday(arguments);
+            case "optional_boss" -> optional_boss(arguments);
             default -> throw new AssertionError("Undefined command " + base + ".");
         };
     }
@@ -221,6 +222,39 @@ public class Scenarios {
             var parsed = command.parseArgs(arguments);
             LocalDate date = (LocalDate) parsed.get("date");
             return new Result.Success<>(Map.of("date", date));
+        }
+        catch (Exception e)
+        {
+            return new Result.Failure<>(e.getMessage());
+        }
+    }
+
+    private static Result<Map<String, Object>> optional_boss(String arguments) {
+
+        Command command = new Command();
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("term1")
+                .setType(Integer.class)
+                .setOptional(1)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("term2")
+                .setType(Integer.class)
+                .setOptional(2)
+                .build());
+        command.addArgument(Argument.Builder.newInstance()
+                .setName("term3")
+                .setType(Integer.class)
+                .setOptional(3)
+                .build());
+
+        try
+        {
+            var parsed = command.parseArgs(arguments);
+            Integer term1 = (Integer) parsed.get("term1");
+            Integer term2 = (Integer) parsed.get("term2");
+            Integer term3 = (Integer) parsed.get("term3");
+            return new Result.Success<>(Map.of("term1", term1, "term2", term2, "term3", term3));
         }
         catch (Exception e)
         {
